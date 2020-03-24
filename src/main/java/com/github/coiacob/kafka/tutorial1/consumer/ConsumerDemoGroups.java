@@ -20,7 +20,7 @@ public class ConsumerDemoGroups {
         Logger logger = LoggerFactory.getLogger(ConsumerDemoGroups.class.getName());
 
         String bootstrapServers = "localhost:9092";
-        String groupId = "my-fourth-application";
+        String groupId = "my-fifth-application";
         String topic = "first_topic";
 
         // create consumer configs (properties)
