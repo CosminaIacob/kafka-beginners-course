@@ -3,3 +3,5 @@
 /.gitignore
 /.idea/
 /kafka-beginners-course.iml
+/kafka-basics/kafka-basics.iml
+/kafka-producer-twitter/kafka-producer-twitter.iml
