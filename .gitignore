@@ -5,3 +5,6 @@
 /kafka-beginners-course.iml
 /kafka-basics/kafka-basics.iml
 /kafka-producer-twitter/kafka-producer-twitter.iml
+/kafka-basics/target/classes/
+/kafka-consumer-elasticsearch/target/classes/com/github/coiacob/kafka/tutorial3/ElasticSearchConsumer.class
+/kafka-consumer-elasticsearch/kafka-consumer-elasticsearch.iml
