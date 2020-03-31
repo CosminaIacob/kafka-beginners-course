@@ -1,5 +1,6 @@
 package com.github.coiacob.kafka.tutorial3;
 
+import com.google.gson.JsonParser;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -74,6 +75,16 @@ public class ElasticSearchConsumer {
 
     }
 
+    private static JsonParser jsonParser = new JsonParser();
+
+    private static String extractIdFromTweets(String tweetJson) {
+        return jsonParser.parse(tweetJson)
+                .getAsJsonObject()
+                .get("id_str")
+                .getAsString();
+
+    }
+
     public static void main(String[] args) throws IOException {
 
         Logger logger = LoggerFactory.getLogger(ElasticSearchConsumer.class.getName());
@@ -88,16 +99,23 @@ public class ElasticSearchConsumer {
 
             for (ConsumerRecord<String, String> record : records) {
 
-                // here is where we insert data into ElasticSearch
+                // 2 strategies for generating id's for the ES index
 
+                // #1 kafka generic ID
+                // String id = record.topic() + "_" + record.partition() + "_" + record.offset();
+
+                // #2 twitter feed specific ID
+                String id = extractIdFromTweets(record.value());
+
+                // here is where we insert data into ElasticSearch
                 IndexRequest indexRequest = new IndexRequest(
                         "twitter",
-                        "tweets")
-                        .source(record.value(), XContentType.JSON);
+                        "tweets",
+                        id //this is to make the consumer idempotent
+                ).source(record.value(), XContentType.JSON);
 
                 IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-                String id = indexResponse.getId();
-                logger.info(id);
+                logger.info(indexResponse.getId());
                 try {
                     Thread.sleep(1000); // introduce a small delay, for visibility
                 } catch (InterruptedException e) {
